@@ -2,12 +2,17 @@
 
 import { useState } from 'react';
 import { ParsedResult } from '@/lib/odata-parser';
+import CollapsibleJson from '@/components/CollapsibleJson';
 
 export default function Home() {
   const [metadata, setMetadata] = useState('');
   const [result, setResult] = useState<ParsedResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({ actions: true, functions: true, entities: true, complexTypes: true });
+
+  const copyToClipboard = (data: any) => {
+    navigator.clipboard.writeText(JSON.stringify(data, null, 2));
+  };
 
   const handleParse = async () => {
     if (!metadata.trim()) return;
@@ -76,16 +81,28 @@ export default function Home() {
                   {!collapsed[`action-${index}`] && (
                     <>
                       <div className="mt-2">
-                        <strong>Parameters:</strong>
-                        <pre className="bg-gray-100 p-2 rounded mt-1 text-sm overflow-x-auto">
-                          {JSON.stringify(action.parameters, null, 2)}
-                        </pre>
+                        <div className="flex items-center justify-between">
+                          <strong>Parameters:</strong>
+                          <button 
+                            onClick={() => copyToClipboard(action.parameters)}
+                            className="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded"
+                          >
+                            Copy
+                          </button>
+                        </div>
+                        <CollapsibleJson data={action.parameters} />
                       </div>
                       <div className="mt-2">
-                        <strong>Return:</strong>
-                        <pre className="bg-gray-100 p-2 rounded mt-1 text-sm overflow-x-auto">
-                          {JSON.stringify(action.returnType, null, 2)}
-                        </pre>
+                        <div className="flex items-center justify-between">
+                          <strong>Return:</strong>
+                          <button 
+                            onClick={() => copyToClipboard(action.returnType)}
+                            className="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded"
+                          >
+                            Copy
+                          </button>
+                        </div>
+                        <CollapsibleJson data={action.returnType} />
                       </div>
                     </>
                   )}
@@ -112,10 +129,16 @@ export default function Home() {
                   </h4>
                   {!collapsed[`function-${index}`] && (
                     <div className="mt-2">
-                      <strong>Return:</strong>
-                      <pre className="bg-gray-100 p-2 rounded mt-1 text-sm overflow-x-auto">
-                        {JSON.stringify(func.returnType, null, 2)}
-                      </pre>
+                      <div className="flex items-center justify-between">
+                        <strong>Return:</strong>
+                        <button 
+                          onClick={() => copyToClipboard(func.returnType)}
+                          className="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded"
+                        >
+                          Copy
+                        </button>
+                      </div>
+                      <CollapsibleJson data={func.returnType} />
                     </div>
                   )}
                 </div>
@@ -140,9 +163,17 @@ export default function Home() {
                     {collapsed[`entity-${entityName}`] ? '▶' : '▼'} {entityName}
                   </h4>
                   {!collapsed[`entity-${entityName}`] && (
-                    <pre className="bg-gray-100 p-2 rounded mt-2 text-sm overflow-x-auto">
-                      {JSON.stringify(properties, null, 2)}
-                    </pre>
+                    <div>
+                      <div className="flex justify-end mb-2">
+                        <button 
+                          onClick={() => copyToClipboard(properties)}
+                          className="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded"
+                        >
+                          Copy
+                        </button>
+                      </div>
+                      <CollapsibleJson data={properties} />
+                    </div>
                   )}
                 </div>
               ))}
@@ -166,9 +197,17 @@ export default function Home() {
                     {collapsed[`complexType-${typeName}`] ? '▶' : '▼'} {typeName}
                   </h4>
                   {!collapsed[`complexType-${typeName}`] && (
-                    <pre className="bg-gray-100 p-2 rounded mt-2 text-sm overflow-x-auto">
-                      {JSON.stringify(properties, null, 2)}
-                    </pre>
+                    <div>
+                      <div className="flex justify-end mb-2">
+                        <button 
+                          onClick={() => copyToClipboard(properties)}
+                          className="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded"
+                        >
+                          Copy
+                        </button>
+                      </div>
+                      <CollapsibleJson data={properties} />
+                    </div>
                   )}
                 </div>
               ))}

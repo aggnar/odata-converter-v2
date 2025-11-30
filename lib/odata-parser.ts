@@ -56,7 +56,7 @@ export async function parseODataMetadata(xmlContent: string): Promise<ParsedResu
   // Parse entities
   schema.entityTypes?.forEach((entityType: any) => {
     const properties: Record<string, any> = {};
-    
+  
     entityType.entityProperties?.forEach((prop: any) => {
       if (prop.type.startsWith(`${namespace}.`)) {
         const typeName = prop.type.replace(`${namespace}.`, '');
@@ -69,10 +69,11 @@ export async function parseODataMetadata(xmlContent: string): Promise<ParsedResu
 
     entityType.navigationProperties?.forEach((navProp: any) => {
       const targetType = navProp.targetTypeName.replace(`${namespace}.`, '');
+      
       if (navProp.isCollection) {
-        properties[navProp.name] = [{ [`${targetType}ID`]: 0 }];
+        properties[navProp.name] = [entities[targetType]];
       } else {
-        properties[navProp.name] = { [`${targetType}ID`]: 0 };
+        properties[navProp.name] = entities[targetType];
       }
     });
 
@@ -85,9 +86,6 @@ export async function parseODataMetadata(xmlContent: string): Promise<ParsedResu
     let returnType: any = {};
 
     action.parameters?.forEach((param: any) => {
-      console.log('------');
-      console.log('action name', action.name);
-      console.log('action parameter', param.name);
       // if (param.name === '_it'){
       //   return;
       // }
