@@ -31,30 +31,13 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
    - **Actions (POST)**: Shows parameters and return types
    - **Functions (GET)**: Shows return types
    - **Entities**: Shows all entity properties as JSON objects
+   - **Complex Types**: Shows complex type structures
 
-## Example Output
+## 👨💻 Author
 
-For the provided Northwind metadata, you'll get:
+- GitHub: [@aggnar](https://github.com/aggnar)
 
-### Actions (POST)
-- `discontinue`: Parameters with entity structure, returns Product entity
-- `submitOrder`: Parameters with product ID and quantity, returns integer
-
-### Functions (GET)  
-- `randomProduct`: Returns Product entity structure
-
-### Entities
-- Products, Suppliers, Categories with all properties and navigation relationships
-
-## License
-
-MIT License
-
-## Author
-
-Created by Rangga Eka
-
-## Credits
+## 🙏 Credits
 
 - Built with [Next.js](https://nextjs.org/)
 - Uses [@sap-ux/edmx-parser](https://www.npmjs.com/package/@sap-ux/edmx-parser) for OData metadata parsing
