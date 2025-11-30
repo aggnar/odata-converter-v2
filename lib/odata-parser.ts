@@ -42,7 +42,6 @@ export async function parseODataMetadata(xmlContent: string): Promise<ParsedResu
       } else if (prop.type.startsWith('Collection(')) {
         
         const typeName = prop.type.replace('Collection(', '').replace(')', '').replace(`${namespace}.`, '');
-        console.log('typeName', typeName);
         properties[prop.name] = [entities[typeName] || complexTypes[typeName] || {}];
       } else {
         const type = prop.type.replace('Edm.', '');
@@ -69,7 +68,7 @@ export async function parseODataMetadata(xmlContent: string): Promise<ParsedResu
 
     entityType.navigationProperties?.forEach((navProp: any) => {
       const targetType = navProp.targetTypeName.replace(`${namespace}.`, '');
-      
+
       if (navProp.isCollection) {
         properties[navProp.name] = [entities[targetType]];
       } else {
@@ -97,7 +96,6 @@ export async function parseODataMetadata(xmlContent: string): Promise<ParsedResu
       } else if (param.type.startsWith('Collection(')) {
         
         const typeName = param.type.replace('Collection(', '').replace(')', '').replace(`${namespace}.`, '');
-        console.log('typeName', typeName);
         parameters[param.name] = [entities[typeName] || complexTypes[typeName] || {}];
       } else {
         const type = param.type.replace('Edm.', '');
@@ -108,7 +106,11 @@ export async function parseODataMetadata(xmlContent: string): Promise<ParsedResu
     if (action.returnType) {
       if (action.returnType.startsWith(`${namespace}.`)) {
         const typeName = action.returnType.replace(`${namespace}.`, '');
-        returnType = { [typeName]: entities[typeName] || complexTypes[typeName] || {} };
+        returnType = entities[typeName] || complexTypes[typeName] || {};
+      } else if (action.returnType.startsWith('Collection(')) {
+        
+        const typeName = action.returnType.replace('Collection(', '').replace(')', '').replace(`${namespace}.`, '');
+        returnType = [entities[typeName] || complexTypes[typeName] || {}];
       } else {
         const type = action.returnType.replace('Edm.', '');
         returnType = getDefaultValue(type);
